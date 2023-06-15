@@ -1,7 +1,7 @@
 {
-  "name": "@quidone/react-native-wheel-picker",
-  "version": "0.3.6",
-  "description": "Picker is a UI component for selecting an item from a list of options.",
+  "name": "@gungkrisna/react-native-ios-time-picker",
+  "version": "0.1",
+  "description": "An iOS-style picker component without native implementation, inspired by Swift's UIDatePicker's countDownTimer mode.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -41,6 +41,9 @@
   },
   "keywords": [
     "react-native",
+    "UIDatePicker",
+    "time",
+    "timer",
     "wheel",
     "picker",
     "expo",
@@ -49,13 +52,13 @@
     "select",
     "field"
   ],
-  "repository": "https://github.com/quidone/react-native-wheel-picker",
-  "author": "Sergey Rozhkov <rozhkovse1@gmail.com> (https://github.com/quidone/react-native-wheel-picker)",
+  "repository": "https://github.com/GoogleBard/react-native-ios-time-picker",
+  "author": "gk <gungkrisna@outlook.com> (https://github.com/gungkrisna/react-native-ios-time-picker)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quidone/react-native-wheel-picker/issues"
+    "url": "https://github.com/GoogleBard/react-native-ios-time-picker/issues"
   },
-  "homepage": "https://github.com/quidone/react-native-wheel-picker#readme",
+  "homepage": "https://github.com/GoogleBard/react-native-ios-time-picker#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
