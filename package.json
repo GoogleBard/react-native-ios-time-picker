@@ -1,6 +1,6 @@
 {
   "name": "@gungkrisna/react-native-ios-time-picker",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "An iOS-style picker component without native implementation, inspired by Swift's UIDatePicker's countDownTimer mode.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -53,7 +53,7 @@
     "field"
   ],
   "repository": "https://github.com/GoogleBard/react-native-ios-time-picker",
-  "author": "gk <gungkrisna@outlook.com> (https://github.com/gungkrisna/react-native-ios-time-picker)",
+  "author": "gk <gungkrisna@outlook.com> (https://github.com/GoogleBard/react-native-ios-time-picker)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/GoogleBard/react-native-ios-time-picker/issues"

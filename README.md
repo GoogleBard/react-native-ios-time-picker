@@ -7,7 +7,7 @@ An iOS-style picker component inspired by Swift [UIDatePicker](https://developer
 ## Installation
 
 ```sh
-yarn add @gungkrisna/react-native-wheel-picker
+yarn add @gungkrisna/react-native-ios-time-picker
 ```
 
 ## Usage
