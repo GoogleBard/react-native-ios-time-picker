@@ -1,10 +1,8 @@
 import type {Animated} from 'react-native';
 import {useEffect, useMemo, useRef} from 'react';
 import {usePrevious, useStableCallback} from '@rozhkov/react-useful-hooks';
-import debounce from '@utils/debounce';
-
+import debounce from '../../../utils/debounce';
 const useValueEventsEffect = <ItemT>(
-  // in
   {
     valueIndex,
     data,
@@ -18,7 +16,6 @@ const useValueEventsEffect = <ItemT>(
     offsetYAv: Animated.Value;
     touching: boolean;
   },
-  // events
   {
     onValueChanging,
     onValueChanged,
@@ -48,21 +45,22 @@ const useValueEventsEffect = <ItemT>(
       }
     }
   });
-
   const onStableValueChanged = useStableCallback(() => {
     if (onValueChanged === undefined || touching) {
       return;
     }
     const activeIndex = activeIndexRef.current;
     if (activeIndex !== valueIndex) {
-      onValueChanged({index: activeIndex, item: data[activeIndex]!});
+      onValueChanged({
+        index: activeIndex,
+        item: data[activeIndex]!,
+      });
     }
   });
   const onValueChangedDebounce = useMemo(
     () => debounce(onStableValueChanged, 300),
     [onStableValueChanged],
   );
-
   useEffect(() => {
     const id = offsetYAv.addListener(({value: offset}) => {
       onValueChangedDebounce();
@@ -70,7 +68,10 @@ const useValueEventsEffect = <ItemT>(
       const activeIndex = activeIndexRef.current;
       if (index !== activeIndex) {
         activeIndexRef.current = index;
-        onValueChanging?.({item: data[index]!, index});
+        onValueChanging?.({
+          item: data[index]!,
+          index,
+        });
       }
     });
     return () => {
@@ -84,7 +85,6 @@ const useValueEventsEffect = <ItemT>(
     onValueChangedDebounce,
     onValueChanging,
   ]);
-
   const prevTouching = usePrevious(touching);
   if (touching && !prevTouching) {
     onValueChangedDebounce.clear();
@@ -92,5 +92,4 @@ const useValueEventsEffect = <ItemT>(
     onValueChangedDebounce();
   }
 };
-
 export default useValueEventsEffect;

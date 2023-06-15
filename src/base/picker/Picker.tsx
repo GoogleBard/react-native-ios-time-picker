@@ -20,32 +20,28 @@ import type {
 import OverlayContainer from '../overlay/OverlayContainer';
 import {createFaces} from '../item/faces';
 import PickerItemContainer from '../item/PickerItemContainer';
-import {useBoolean} from '@utils/react';
+import {useBoolean} from '../../utils/react';
 import {useInit, useMemoObject} from '@rozhkov/react-useful-hooks';
-
 const MemoAnimatedFlatList = memo(
   Animated.FlatList,
 ) as unknown as typeof Animated.FlatList;
-
 export type PickerProps<ItemT extends PickerItem<any>> = {
   data: ReadonlyArray<ItemT>;
   value?: ItemT['value'];
   itemHeight?: number;
   width?: number | string;
-
   onValueChanging?: (event: ValueChangingEvent<ItemT>) => void;
   onValueChanged?: (event: ValueChangedEvent<ItemT>) => void;
-
   keyExtractor?: KeyExtractor<ItemT>;
   renderItem?: RenderItem<ItemT>;
   renderItemContainer?: RenderItemContainer<ItemT>;
   renderSelectionOverlay?: RenderSelectionOverlay | null;
   renderOverlayContainer?: RenderOverlayContainer | null;
-
   style?: StyleProp<ViewStyle>;
   itemTextStyle?: StyleProp<TextStyle>;
+  labelTextStyle?: StyleProp<TextStyle>;
+  selectionOverlayLabel?: string | undefined;
   selectionOverlayStyle?: StyleProp<ViewStyle>;
-
   scrollEventThrottle?: number;
   disableVirtualization?: boolean;
   initialNumToRender?: number;
@@ -53,7 +49,6 @@ export type PickerProps<ItemT extends PickerItem<any>> = {
   maxToRenderPerBatch?: number;
   updateCellsBatchingPeriod?: number;
 };
-
 const defaultKeyExtractor: KeyExtractor<any> = (_, index) => index.toString();
 const defaultRenderItem: RenderItem<PickerItem<any>> = ({
   item: {value, label},
@@ -70,43 +65,45 @@ const defaultRenderItemContainer: RenderItemContainer<any> = (props) => (
 );
 const defaultRenderSelectionOverlay: RenderSelectionOverlay = ({
   itemHeight,
+  pickerWidth,
+  labelTextStyle,
+  selectionOverlayLabel,
   selectionOverlayStyle,
 }) => (
   <SelectionOverlay
     height={itemHeight}
+    width={pickerWidth}
+    labelTextStyle={labelTextStyle}
+    selectionOverlayLabel={selectionOverlayLabel}
     selectionOverlayStyle={selectionOverlayStyle}
   />
 );
 const defaultRenderOverlayContainer: RenderOverlayContainer = (props) => (
   <OverlayContainer {...props} />
 );
-
 const useValueIndex = (data: ReadonlyArray<PickerItem<any>>, value: any) => {
   return useMemo(() => {
     const index = data.findIndex((x) => x.value === value);
     return index >= 0 ? index : 0;
   }, [data, value]);
 };
-
 const Picker = <ItemT extends PickerItem<any>>({
   data,
   value,
   width = 'auto',
   itemHeight = 48,
-
   onValueChanged,
   onValueChanging,
-
   keyExtractor = defaultKeyExtractor,
   renderItem = defaultRenderItem,
   renderItemContainer = defaultRenderItemContainer,
   renderSelectionOverlay = defaultRenderSelectionOverlay,
   renderOverlayContainer = defaultRenderOverlayContainer,
-
   style,
   itemTextStyle,
+  labelTextStyle,
+  selectionOverlayLabel,
   selectionOverlayStyle,
-
   scrollEventThrottle = 16,
   initialNumToRender = 3,
   maxToRenderPerBatch = 3,
@@ -119,13 +116,18 @@ const Picker = <ItemT extends PickerItem<any>>({
   const offsetYAv = useRef(new Animated.Value(valueIndex * itemHeight)).current;
   const listRef = useRef<FlatList>(null);
   const touching = useBoolean(false);
-
   const height = itemHeight * 5;
   const paddingVertical = itemHeight * 2;
   const faces = useMemo(() => createFaces(itemHeight), [itemHeight]);
   const renderPickerItem = useCallback(
     ({item, index}: ListRenderItemInfo<ItemT>) =>
-      renderItemContainer({item, index, faces, renderItem, itemTextStyle}),
+      renderItemContainer({
+        item,
+        index,
+        faces,
+        renderItem,
+        itemTextStyle,
+      }),
     [faces, itemTextStyle, renderItem, renderItemContainer],
   );
   const getItemLayout = useCallback(
@@ -142,29 +144,64 @@ const Picker = <ItemT extends PickerItem<any>>({
   );
   const onScroll = useMemo(
     () =>
-      Animated.event([{nativeEvent: {contentOffset: {y: offsetYAv}}}], {
-        useNativeDriver: true,
-      }),
+      Animated.event(
+        [
+          {
+            nativeEvent: {
+              contentOffset: {
+                y: offsetYAv,
+              },
+            },
+          },
+        ],
+        {
+          useNativeDriver: true,
+        },
+      ),
     [offsetYAv],
   );
-  const contentContainerStyle = useMemoObject({paddingVertical});
-
+  const contentContainerStyle = useMemoObject({
+    paddingVertical,
+  });
   useValueEventsEffect(
-    {data, valueIndex, itemHeight, offsetYAv, touching: touching.value},
-    {onValueChanging, onValueChanged},
+    {
+      data,
+      valueIndex,
+      itemHeight,
+      offsetYAv,
+      touching: touching.value,
+    },
+    {
+      onValueChanging,
+      onValueChanged,
+    },
   );
-  useSyncScrollEffect({listRef, valueIndex, touching: touching.value});
-
+  useSyncScrollEffect({
+    listRef,
+    valueIndex,
+    touching: touching.value,
+  });
   return (
     <ScrollContentOffsetContext.Provider value={offsetYAv}>
       <PickerItemHeightContext.Provider value={itemHeight}>
-        <View style={[styles.root, style, {height, width}]}>
+        <View
+          style={[
+            styles.root,
+            style,
+            {
+              height,
+              width,
+            },
+          ]}
+        >
           {renderOverlayContainer !== null &&
             renderOverlayContainer({
               itemHeight,
               renderSelectionOverlay,
               pickerWidth: width,
               pickerHeight: height,
+              labelTextStyle,
+              selectionOverlayLabel,
               selectionOverlayStyle,
             })}
           <MemoAnimatedFlatList
@@ -195,10 +232,13 @@ const Picker = <ItemT extends PickerItem<any>>({
     </ScrollContentOffsetContext.Provider>
   );
 };
-
 const styles = StyleSheet.create({
-  root: {justifyContent: 'center', alignItems: 'center'},
-  list: {width: '100%'},
+  root: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  list: {
+    width: '100%',
+  },
 });
-
 export default Picker;

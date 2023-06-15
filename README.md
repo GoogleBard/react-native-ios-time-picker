@@ -1,31 +1,21 @@
-# @quidone/react-native-wheel-picker
+# @gungkrisna/react-native-ios-time-picker
 
-React Native Calendars
+An iOS-style picker component inspired by Swift [UIDatePicker](https://developer.apple.com/documentation/uikit/uidatepicker)'s countDownTimer mode without the native side. Working cross-platform and compatible with Expo. It's a fork of [react-native-wheel-picker](https://github.com/quidone/react-native-wheel-picker).
+
+![Preview](preview.gif)
 
 ## Installation
 
 ```sh
-npm install @quidone/react-native-wheel-picker
+yarn add @gungkrisna/react-native-wheel-picker
 ```
 
 ## Usage
 
-```js
-import { multiply } from '@quidone/react-native-wheel-picker';
+If you want to see more examples and experiment, run the examples locally.
 
-// ...
-
-const result = await multiply(3, 7);
+```git clone git@github.com:gungkrisna/react-native-ios-time-picker.git
+cd react-native-ios-time-picker
+yarn install
+cd example && yarn install && yarn start
 ```
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

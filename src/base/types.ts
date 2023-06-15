@@ -1,12 +1,10 @@
 import type React from 'react';
 import type {Faces} from './item/faces';
 import type {StyleProp, TextStyle, ViewStyle} from 'react-native';
-
 export type PickerItem<T> = {
   value: T;
   label?: string;
 };
-
 export type KeyExtractor<ItemT extends PickerItem<any>> = (
   item: ItemT,
   index: number,
@@ -23,10 +21,11 @@ export type RenderItemContainer<ItemT extends PickerItem<any>> = (info: {
   renderItem: RenderItem<ItemT>;
   itemTextStyle: StyleProp<TextStyle> | undefined;
 }) => React.ReactElement | null;
-
 export type RenderSelectionOverlay = (info: {
   itemHeight: number;
   pickerWidth: number | string;
+  labelTextStyle: StyleProp<TextStyle> | undefined;
+  selectionOverlayLabel: string | undefined;
   selectionOverlayStyle: StyleProp<ViewStyle> | undefined;
 }) => React.ReactElement | null;
 export type RenderOverlayContainer = (info: {
@@ -34,8 +33,15 @@ export type RenderOverlayContainer = (info: {
   pickerWidth: number | string;
   pickerHeight: number;
   renderSelectionOverlay: RenderSelectionOverlay | null | undefined;
+  labelTextStyle: StyleProp<TextStyle> | undefined;
+  selectionOverlayLabel: string | undefined;
   selectionOverlayStyle: StyleProp<ViewStyle> | undefined;
 }) => React.ReactElement | null;
-
-export type ValueChangingEvent<ItemT> = {item: ItemT; index: number};
-export type ValueChangedEvent<ItemT> = {item: ItemT; index: number};
+export type ValueChangingEvent<ItemT> = {
+  item: ItemT;
+  index: number;
+};
+export type ValueChangedEvent<ItemT> = {
+  item: ItemT;
+  index: number;
+};
